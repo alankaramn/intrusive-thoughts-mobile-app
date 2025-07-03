@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Intrusive Thoughts Release - Therapeutic App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="A therapeutic app to help release intrusive thoughts through visual dissolution">
+    <meta name="theme-color" content="#6b5b73">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Thoughts Release">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiM2YjViNzMiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIj4KPHN0YXIgY3g9IjEyIiBjeT0iMTIiIHI9IjQiIGZpbGw9IiNmZmZmZmYiLz4KPHN0YXIgY3g9IjYiIGN5PSI2IiByPSIyIiBmaWxsPSIjYTNjNGEzIi8+CjxzdGFyIGN4PSIxOCIgY3k9IjYiIHI9IjIiIGZpbGw9IiNhM2M0YTMiLz4KPHN0YXIgY3g9IjYiIGN5PSIxOCIgcj0iMiIgZmlsbD0iI2EzYzRhMyIvPgo8c3RhciBjeD0iMTgiIGN5PSIxOCIgcj0iMiIgZmlsbD0iI2EzYzRhMyIvPgo8L3N2Zz4KPC9zdmc+">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiM2YjViNzMiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIj4KPHN0YXIgY3g9IjEyIiBjeT0iMTIiIHI9IjQiIGZpbGw9IiNmZmZmZmYiLz4KPHN0YXIgY3g9IjYiIGN5PSI2IiByPSIyIiBmaWxsPSIjYTNjNGEzIi8+CjxzdGFyIGN4PSIxOCIgY3k9IjYiIHI9IjIiIGZpbGw9IiNhM2M0YTMiLz4KPHN0YXIgY3g9IjYiIGN5PSIxOCIgcj0iMiIgZmlsbD0iI2EzYzRhMyIvPgo8c3RhciBjeD0iMTgiIGN5PSIxOCIgcj0iMiIgZmlsbD0iI2EzYzRhMyIvPgo8L3N2Zz4KPC9zdmc+">
+</head>
+<body>
+    <!-- PWA Install Banner -->
+    <div id="installBanner" class="install-banner hidden">
+        <div class="install-content">
+            <span>📱 Install this app for the best experience!</span>
+            <button id="installBtn" class="install-btn">Install</button>
+            <button id="dismissBtn" class="dismiss-btn">×</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header-section" id="headerSection">
+            <h1>Release Your Thoughts</h1>
+            <p class="subtitle">Write it down, watch it dissolve, find your peace</p>
+        </div>
+        
+        <div class="content-section" id="contentSection">
+            <textarea id="thoughtBox" placeholder="Write your thoughts here... let them flow freely, then let them go..."></textarea>
+            <button id="releaseBtn" onclick="releaseThought()">Intrusive Thoughts Be Gone!</button>
+        </div>
+        
+        <div class="particles-container" id="particles"></div>
+        <canvas id="sparkleCanvas"></canvas>
+    </div>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f7f3f0 0%, #e8ddd4 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background 3s ease;
+            padding: 20px;
+            touch-action: manipulation;
+        }
+        
+        body.peaceful {
+            background: linear-gradient(135deg, #f0f4f0 0%, #e1e9e1 100%);
+        }
+        
+        /* PWA Install Banner */
+        .install-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #6b5b73, #8a7c8c);
+            color: white;
+            padding: 12px 20px;
+            z-index: 1000;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .install-banner.show {
+            transform: translateY(0);
+        }
+        
+        .install-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 14px;
+        }
+        
+        .install-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .install-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .dismiss-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+        
+        .dismiss-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #d4c5b9;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            min-height: 450px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 25px;
+                min-height: 400px;
+                max-width: 100%;
+            }
+            
+            h1 {
+                font-size: 2em !important;
+            }
+            
+            .subtitle {
+                font-size: 1em !important;
+            }
+        }
+        
+        .header-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            transition: opacity 0.8s ease;
+        }
+        
+        .content-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            transition: opacity 0.8s ease;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #6b5b73;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin: 0;
+        }
+        
+        .subtitle {
+            color: #8a7c8c;
+            font-style: italic;
+            font-size: 1.1em;
+            margin: 0;
+        }
+        
+        #thoughtBox {
+            width: 100%;
+            height: 120px;
+            padding: 20px;
+            border: 2px solid #d4c5b9;
+            border-radius: 15px;
+            font-size: 16px;
+            font-family: 'Georgia', serif;
+            resize: vertical;
+            outline: none;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            color: #4a4a4a;
+            line-height: 1.6;
+            touch-action: manipulation;
+        }
+        
+        #thoughtBox::placeholder {
+            color: #a0a0a0;
+        }
+        
+        #thoughtBox:focus {
+            border-color: #9d8189;
+            box-shadow: 0 0 15px rgba(157, 129, 137, 0.2);
+            transform: scale(1.02);
+        }
+        
+        #thoughtBox.chaotic {
+            border-color: #d4958a;
+            background: rgba(255, 255, 255, 0.6);
+            animation: subtle-shake 0.1s ease-in-out infinite;
+        }
+        
+        @keyframes subtle-shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-1px); }
+            75% { transform: translateX(1px); }
+        }
+        
+        #releaseBtn {
+            padding: 18px 40px;
+            font-size: 18px;
+            background: linear-gradient(45deg, #9d8189, #b8a5aa);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(157, 129, 137, 0.3);
+            min-height: 44px;
+            min-width: 200px;
+            touch-action: manipulation;
+            user-select: none;
+        }
+        
+        #releaseBtn:hover, #releaseBtn:active {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(157, 129, 137, 0.4);
+            background: linear-gradient(45deg, #b8a5aa, #c5b4b8);
+        }
+        
+        #releaseBtn:active {
+            transform: scale(0.98);
+        }
+        
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #a3c4a3;
+            border-radius: 50%;
+            opacity: 0;
+            animation: float-away 3s ease-out forwards;
+        }
+        
+        @keyframes float-away {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-200px) scale(0);
+            }
+        }
+        
+        #sparkleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 15;
+        }
+        
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* Victory State Styles */
+        .victory-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        
+        .victory-container.show {
+            opacity: 1;
+        }
+        
+        .victory-title {
+            color: #6b5b73;
+            font-size: 2em;
+            font-weight: 300;
+            margin: 0;
+        }
+        
+        .victory-gif {
+            width: 250px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .victory-text {
+            color: #8a7c8c;
+            font-size: 1.2em;
+            font-style: italic;
+            margin: 0;
+        }
+        
+        .victory-button {
+            padding: 18px 30px;
+            background: linear-gradient(45deg, #a3c4a3, #b5d3b5);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(163, 196, 163, 0.3);
+            min-height: 44px;
+            touch-action: manipulation;
+            user-select: none;
+        }
+        
+        .victory-button:hover, .victory-button:active {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(163, 196, 163, 0.4);
+            background: linear-gradient(45deg, #b5d3b5, #c4e0c4);
+        }
+        
+        .victory-button:active {
+            transform: scale(0.98);
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            .victory-gif {
+                width: 200px;
+                height: 150px;
+            }
+            
+            .victory-title {
+                font-size: 1.8em;
+            }
+            
+            .victory-text {
+                font-size: 1.1em;
+            }
+            
+            #thoughtBox {
+                height: 100px;
+                font-size: 14px;
+            }
+            
+            #releaseBtn {
+                font-size: 16px;
+                padding: 16px 30px;
+            }
+        }
+    </style>
+    
+    <script>
+        let isReleasing = false;
+        let deferredPrompt;
+        
+        // PWA Installation
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallBanner();
+        });
+        
+        function showInstallBanner() {
+            const banner = document.getElementById('installBanner');
+            banner.classList.remove('hidden');
+            banner.classList.add('show');
+        }
+        
+        document.getElementById('installBtn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    hideInstallBanner();
+                }
+                deferredPrompt = null;
+            }
+        });
+        
+        document.getElementById('dismissBtn').addEventListener('click', hideInstallBanner);
+        
+        function hideInstallBanner() {
+            const banner = document.getElementById('installBanner');
+            banner.classList.remove('show');
+            setTimeout(() => banner.classList.add('hidden'), 300);
+        }
+        
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+        
+        // Add chaos effect when typing
+        document.getElementById('thoughtBox').addEventListener('input', function() {
+            if (this.value.length > 0 && !isReleasing) {
+                this.classList.add('chaotic');
+            } else if (!isReleasing) {
+                this.classList.remove('chaotic');
+            }
+        });
+        
+        function createSparkles() {
+            const canvas = document.getElementById('sparkleCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            const sparkles = [];
+            
+            for (let i = 0; i < 50; i++) {
+                sparkles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 3 + 1,
+                    speedX: (Math.random() - 0.5) * 2,
+                    speedY: Math.random() * -3 - 1,
+                    opacity: 1,
+                    decay: Math.random() * 0.02 + 0.01
+                });
+            }
+            
+            function animateSparkles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                sparkles.forEach((sparkle, index) => {
+                    sparkle.x += sparkle.speedX;
+                    sparkle.y += sparkle.speedY;
+                    sparkle.opacity -= sparkle.decay;
+                    
+                    if (sparkle.opacity <= 0) {
+                        sparkles.splice(index, 1);
+                        return;
+                    }
+                    
+                    ctx.save();
+                    ctx.globalAlpha = sparkle.opacity;
+                    ctx.fillStyle = '#a3c4a3';
+                    ctx.shadowColor = '#a3c4a3';
+                    ctx.shadowBlur = 10;
+                    
+                    ctx.beginPath();
+                    ctx.arc(sparkle.x, sparkle.y, sparkle.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath();
+                    ctx.arc(sparkle.x, sparkle.y, sparkle.size * 0.3, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.restore();
+                });
+                
+                if (sparkles.length > 0) {
+                    requestAnimationFrame(animateSparkles);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+            
+            animateSparkles();
+        }
+        
+        function createFloatingParticles() {
+            const container = document.getElementById('particles');
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                particle.style.backgroundColor = `hsl(${120 + Math.random() * 30}, 35%, 65%)`;
+                container.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 3000);
+            }
+        }
+        
+        function playWhooshSound() {
+            const whooshDiv = document.createElement('div');
+            whooshDiv.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: radial-gradient(circle, transparent 0%, rgba(163, 196, 163, 0.2) 70%);
+                pointer-events: none;
+                z-index: 20;
+                animation: whoosh-wave 1s ease-out forwards;
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes whoosh-wave {
+                    0% { opacity: 0; transform: scale(0.5); }
+                    50% { opacity: 1; transform: scale(1.2); }
+                    100% { opacity: 0; transform: scale(2); }
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(whooshDiv);
+            
+            setTimeout(() => {
+                whooshDiv.remove();
+                style.remove();
+            }, 1000);
+        }
+        
+        function releaseThought() {
+            if (isReleasing) return;
+            
+            const thoughtBox = document.getElementById('thoughtBox');
+            
+            if (thoughtBox.value.trim() === '') {
+                thoughtBox.placeholder = "Write something first, then let it go...";
+                thoughtBox.focus();
+                return;
+            }
+            
+            isReleasing = true;
+            
+            // Remove chaos
+            thoughtBox.classList.remove('chaotic');
+            
+            // Start effects immediately
+            playWhooshSound();
+            createSparkles();
+            createFloatingParticles();
+            
+            // Hide everything at once
+            document.getElementById('headerSection').classList.add('hidden');
+            document.getElementById('contentSection').classList.add('hidden');
+            
+            // Change background
+            setTimeout(() => {
+                document.body.classList.add('peaceful');
+            }, 500);
+            
+            // Show victory content perfectly centered
+            setTimeout(() => {
+                const container = document.querySelector('.container');
+                container.innerHTML = `
+                    <div class="victory-container show">
+                        <h2 class="victory-title">Your mind is clear! ✨</h2>
+                        <img src="https://tenor.com/en-GB/view/graduate-legally-blonde-we-did-it-smile-gif-17216689.gif" 
+                             alt="We did it!" 
+                             class="victory-gif">
+                        <p class="victory-text">We conquered those thoughts together!</p>
+                        <button onclick="resetApp()" class="victory-button">Ready for round two?</button>
+                    </div>
+                    <div class="particles-container" id="particles"></div>
+                    <canvas id="sparkleCanvas"></canvas>
+                `;
+            }, 1000);
+            
+            // Auto reset after 8 seconds
+            setTimeout(() => {
+                resetApp();
+            }, 9000);
+        }
+        
+        function resetApp() {
+            const container = document.querySelector('.container');
+            
+            // Restore original layout
+            container.innerHTML = `
+                <div class="header-section" id="headerSection">
+                    <h1>Release Your Thoughts</h1>
+                    <p class="subtitle">Write it down, watch it dissolve, find your peace</p>
+                </div>
+                
+                <div class="content-section" id="contentSection">
+                    <textarea id="thoughtBox" placeholder="Write your thoughts here... let them flow freely, then let them go..."></textarea>
+                    <button id="releaseBtn" onclick="releaseThought()">Intrusive Thoughts Be Gone!</button>
+                </div>
+                
+                <div class="particles-container" id="particles"></div>
+                <canvas id="sparkleCanvas"></canvas>
+            `;
+            
+            // Re-add event listener for chaos effect
+            document.getElementById('thoughtBox').addEventListener('input', function() {
+                if (this.value.length > 0 && !isReleasing) {
+                    this.classList.add('chaotic');
+                } else if (!isReleasing) {
+                    this.classList.remove('chaotic');
+                }
+            });
+            
+            // Reset states
+            document.body.classList.remove('peaceful');
+            isReleasing = false;
+            
+            // Focus on text area
+            setTimeout(() => {
+                document.getElementById('thoughtBox').focus();
+            }, 100);
+        }
+        
+        // Touch and keyboard support
+        document.addEventListener('keydown', function(e) {
+            const thoughtBox = document.getElementById('thoughtBox');
+            if (thoughtBox && e.ctrlKey && e.key === 'Enter') {
+                releaseThought();
+            }
+        });
+        
+        // Prevent zoom on iOS
+        document.addEventListener('gesturestart', function (e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
