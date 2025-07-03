@@ -1,0 +1,24 @@
+{
+  "name": "Intrusive Thoughts Release",
+  "short_name": "Thoughts Release",
+  "description": "A therapeutic app to help release intrusive thoughts through visual dissolution",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f3f0",
+  "theme_color": "#6b5b73",
+  "orientation": "portrait",
+  "categories": ["health", "medical", "wellness"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiM2YjViNzMiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIj4KPHN0YXIgY3g9IjEyIiBjeT0iMTIiIHI9IjQiIGZpbGw9IiNmZmZmZmYiLz4KPHN0YXIgY3g9IjYiIGN5PSI2IiByPSIyIiBmaWxsPSIjYTNjNGEzIi8+CjxzdGFyIGN4PSIxOCIgY3k9IjYiIHI9IjIiIGZpbGw9IiNhM2M0YTMiLz4KPHN0YXIgY3g9IjYiIGN5PSIxOCIgcj0iMiIgZmlsbD0iI2EzYzRhMyIvPgo8c3RhciBjeD0iMTgiIGN5PSIxOCIgcj0iMiIgZmlsbD0iI2EzYzRhMyIvPgo8L3N2Zz4KPC9zdmc+",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiM2YjViNzMiLz4KPHN2ZyB4PSIxMjgiIHk9IjEyOCIgd2lkdGg9IjI1NiIgaGVpZ2h0PSIyNTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxzdGFyIGN4PSIxMiIgY3k9IjEyIiByPSI0IiBmaWxsPSIjZmZmZmZmIi8+CjxzdGFyIGN4PSI2IiBjeT0iNiIgcj0iMiIgZmlsbD0iI2EzYzRhMyIvPgo8c3RhciBjeD0iMTgiIGN5PSI2IiByPSIyIiBmaWxsPSIjYTNjNGEzIi8+CjxzdGFyIGN4PSI2IiBjeT0iMTgiIHI9IjIiIGZpbGw9IiNhM2M0YTMiLz4KPHN0YXIgY3g9IjE4IiBjeT0iMTgiIHI9IjIiIGZpbGw9IiNhM2M0YTMiLz4KPC9zdmc+Cjwvc3ZnPg==",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
